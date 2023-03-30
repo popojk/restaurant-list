@@ -1,0 +1,23 @@
+{
+  "name": "restaurant_list_CRUD",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VinChien/restaurant_list_CRUD.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VinChien/restaurant_list_CRUD/issues"
+  },
+  "homepage": "https://github.com/VinChien/restaurant_list_CRUD#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
