@@ -36,9 +36,9 @@ header {
   color: #9b4b4b;
 }
 
-.search-bar .search-bar-inner .input-group {
+/* .search-bar .search-bar-inner .input-group {
   top: 18px;
-}
+} */
 
 .form-control::placeholder {
   color: #aaaaaa;
