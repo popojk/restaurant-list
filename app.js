@@ -27,6 +27,16 @@ app.get('/restaurants/:restaurant_id', (req, res) => {
   );
   res.render('show', { restaurant: restaurant });
 });
+// search
+app.get('/search', (req, res) => {
+  const keyword = req.query.keyword;
+  const restaurants = restaurantList.results.filter((restaurant) => {
+    return restaurant.name
+      .toLocaleLowerCase()
+      .includes(keyword.toLocaleLowerCase());
+  });
+  res.render('index', { restaurants: restaurants, keyword: keyword });
+});
 
 // start and listen on the Express server
 app.listen(port, () => {
