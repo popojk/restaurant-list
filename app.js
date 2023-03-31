@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+const restaurant = require('./models/restaurant');
+
 // require mongoose
 const mongoose = require('mongoose');
 // 僅在非正式環境時, 使用 dotenv
@@ -27,6 +29,11 @@ app.set('view engine', 'handlebars');
 // setting static files
 app.use(express.static('public'));
 
+// require body-parser
+const bodyParser = require('body-parser');
+// 每筆請求都要透過 body-parser 作前置處理
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // get database connect status
 const db = mongoose.connection;
 // connect error
@@ -41,8 +48,24 @@ db.once('open', () => {
 // routes setting
 // index
 app.get('/', (req, res) => {
-  res.render('index', { restaurants: restaurantList.results });
+  restaurant
+    .find()
+    .lean()
+    .then((restaurants) => res.render('index', { restaurants: restaurants }))
+    .catch((error) => console.error(error));
 });
+
+// new
+app.get('/restaurants/new', (req, res) => {
+  res.render('new');
+});
+app.post('/restaurants', (req, res) => {
+  restaurant
+    .create(req.body)
+    .then(() => res.redirect('/'))
+    .catch((err) => console.log(err));
+});
+
 // show
 app.get('/restaurants/:restaurant_id', (req, res) => {
   const restaurant = restaurantList.results.find(
@@ -50,6 +73,7 @@ app.get('/restaurants/:restaurant_id', (req, res) => {
   );
   res.render('show', { restaurant: restaurant });
 });
+
 // search
 app.get('/search', (req, res) => {
   const keyword = req.query.keyword;
