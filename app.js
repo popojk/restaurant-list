@@ -114,6 +114,24 @@ app.get('/search', (req, res) => {
   res.render('index', { restaurants: restaurants, keyword: keyword });
 });
 
+// delete
+app.get('/restaurants/:id/delete', (req, res) => {
+  const id = req.params.id;
+  return restaurant
+    .findById(id)
+    .lean()
+    .then((restaurant) => res.render('delete', { restaurant: restaurant }))
+    .catch((error) => console.log(error));
+});
+
+app.delete('/:id', (req, res) => {
+  const id = req.params.id;
+  restaurant
+    .findByIdAndDelete(id)
+    .then(() => res.redirect('/'))
+    .catch((error) => console.log(error));
+});
+
 // start and listen on the Express server
 app.listen(port, () => {
   console.log(`Express is listening on localhost:${port}`);
