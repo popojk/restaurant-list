@@ -2,11 +2,19 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-
+// require restaurant.js
 const restaurant = require('./models/restaurant');
-
+// require express-handlebars
+const exphbs = require('express-handlebars');
+// require restaurant.json
+const restaurantList = require('./restaurant.json');
 // require mongoose
 const mongoose = require('mongoose');
+// require body-parser
+const bodyParser = require('body-parser');
+// require methodOverride
+const methodOverride = require('method-override');
+
 // 僅在非正式環境時, 使用 dotenv
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
@@ -17,26 +25,16 @@ mongoose.connect(process.env.MONGODB_URI, {
   useUnifiedTopology: true,
 });
 
-// require express-handlebars
-const exphbs = require('express-handlebars');
-
-const restaurantList = require('./restaurant.json');
-
 // setting template engine
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
-
 // setting static files
 app.use(express.static('public'));
-
-// require body-parser
-const bodyParser = require('body-parser');
 // 每筆請求都要透過 body-parser 作前置處理
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// require methodOverride
-const methodOverride = require('method-override');
+// 每筆請求都會先以 methodOverride 進行前置處理
 app.use(methodOverride('_method'));
+
 
 // get database connect status
 const db = mongoose.connection;
