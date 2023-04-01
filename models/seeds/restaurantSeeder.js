@@ -1,7 +1,9 @@
+// require mongoose
 const mongoose = require('mongoose');
 // require restaurant model
 const restaurant = require('../restaurant');
 const restaurantList = require('../../restaurant.json').results;
+
 // require mongoose config
 const db = require('../../config/mongoose');
 
