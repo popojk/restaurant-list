@@ -2,8 +2,6 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-// require restaurant.js
-const restaurant = require('./models/restaurant');
 // require express-handlebars
 const exphbs = require('express-handlebars');
 // require restaurant.json
@@ -12,12 +10,16 @@ const restaurantList = require('./restaurant.json');
 const bodyParser = require('body-parser');
 // require methodOverride
 const methodOverride = require('method-override');
+// require router
+const routes = require('./routes');
 
 // 僅在非正式環境時, 使用 dotenv
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
+// require mongoose config
+require('./config/mongoose');
 
 // setting template engine
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
@@ -28,89 +30,8 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 // 每筆請求都會先以 methodOverride 進行前置處理
 app.use(methodOverride('_method'));
-
-// routes setting
-// index
-app.get('/', (req, res) => {
-  restaurant
-    .find()
-    .lean()
-    .then((restaurants) => res.render('index', { restaurants: restaurants }))
-    .catch((error) => console.error(error));
-});
-
-// edit
-app.get('/restaurants/:id/edit', (req, res) => {
-  const id = req.params.id;
-  restaurant
-    .findById(id)
-    .lean()
-    .then((restaurant) => res.render('edit', { restaurant: restaurant }))
-    .catch((error) => console.log(error));
-});
-
-app.put('/restaurants/:id', (req, res) => {
-  const id = req.params.id;
-  const updateData = req.body;
-  restaurant
-    .findByIdAndUpdate(id, updateData)
-    .then(() => {
-      res.redirect(`/restaurants/${id}`);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
-
-// new
-app.get('/restaurants/new', (req, res) => {
-  res.render('new');
-});
-app.post('/restaurants', (req, res) => {
-  restaurant
-    .create(req.body)
-    .then(() => res.redirect('/'))
-    .catch((err) => console.log(err));
-});
-
-// detail
-app.get('/restaurants/:id', (req, res) => {
-  const id = req.params.id;
-  return restaurant
-    .findById(id)
-    .lean()
-    .then((restaurant) => res.render('detail', { restaurant: restaurant }))
-    .catch((error) => console.log(error));
-});
-
-// search
-app.get('/search', (req, res) => {
-  const keyword = req.query.keyword;
-  const restaurants = restaurantList.results.filter((restaurant) => {
-    return restaurant.name
-      .toLocaleLowerCase()
-      .includes(keyword.toLocaleLowerCase());
-  });
-  res.render('index', { restaurants: restaurants, keyword: keyword });
-});
-
-// delete
-app.get('/restaurants/:id/delete', (req, res) => {
-  const id = req.params.id;
-  return restaurant
-    .findById(id)
-    .lean()
-    .then((restaurant) => res.render('delete', { restaurant: restaurant }))
-    .catch((error) => console.log(error));
-});
-
-app.delete('/:id', (req, res) => {
-  const id = req.params.id;
-  restaurant
-    .findByIdAndDelete(id)
-    .then(() => res.redirect('/'))
-    .catch((error) => console.log(error));
-});
+// import request into router
+app.use(routes);
 
 // start and listen on the Express server
 app.listen(port, () => {

@@ -1,0 +1,27 @@
+// require Express and Express router
+const express = require('express');
+const router = express.Router();
+
+// require restaurant model
+const restaurant = require('../../models/restaurant');
+
+// index
+router.get('/', (req, res) => {
+  restaurant
+    .find()
+    .lean()
+    .then((restaurants) => res.render('index', { restaurants: restaurants }))
+    .catch((error) => console.error(error));
+});
+
+// delete
+router.delete('/:id', (req, res) => {
+  const id = req.params.id;
+  restaurant
+    .findByIdAndDelete(id)
+    .then(() => res.redirect('/'))
+    .catch((error) => console.log(error));
+});
+
+// export router
+module.exports = router;
