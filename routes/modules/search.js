@@ -25,6 +25,12 @@ router.get('/', (req, res) => {
     sortKeyword = { location: 'asc' };
   }
 
+  let sortWord = sort;
+
+  if (!sort.includes(' (目前的排序)')) {
+    sortWord = sort + ' (目前的排序)';
+  }
+
   restaurant
     .find()
     .lean()
@@ -39,7 +45,7 @@ router.get('/', (req, res) => {
       res.render('index', {
         restaurants: restaurants,
         keyword: keyword,
-        sort: sort,
+        sort: sortWord,
       });
     })
     .catch((error) => console.log(error));
