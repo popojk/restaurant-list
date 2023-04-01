@@ -48,7 +48,10 @@ header {
 .btn-major {
   background-color: #9b4b4b;
   color: white;
-  top: 4px;
+  /* top: 4px; */
+}
+.btn-major:hover {
+  background-color: #683232;
 }
 
 .form-control:focus {

@@ -2,23 +2,38 @@
 <div class='container search-bar'>
   <div class='search-bar-outer'>
     <div class='search-bar-inner'>
+      <h4 class='mb-2'>尋找餐廳：</h4>
       <form action='/search'>
-        <h4 class='mb-2'>尋找餐廳：</h4>
-        <div class='input-group'>
-          <input
-            type='text'
-            name='keyword'
-            value='{{keyword}}'
-            class='form-control'
-            placeholder='輸入餐廳、分類'
-            aria-label='Restaurant Name...'
-            value=''
-            aria-describedby='search-button'
-          />
-          <div class='input-group-append'>
+        <div class='d-flex flex-column flex-sm-row align-items-sm-center gap-2'>
+          <div class='input-group mb-2 mb-sm-0 mr-sm-2'>
+            <input
+              type='text'
+              name='keyword'
+              value='{{keyword}}'
+              class='form-control'
+              placeholder='輸入餐廳、分類'
+              aria-label='Restaurant Name...'
+              value=''
+              aria-describedby='search-button'
+            />
             <button class='btn btn-major' type='submit' id='search-button'><i
                 class='fas fa-search'
               ></i></button>
+          </div>
+          <div class='input-group'>
+            <select class='form-select' id='sort' name='sort'>
+              <option selected>
+                {{#if sort}}
+                  {{sort}}
+                {{else}}
+                  排序 Sort
+                {{/if}}
+              </option>
+              <option>A > Z</option>
+              <option>Z > A</option>
+              <option>類別</option>
+              <option>地區</option>
+            </select>
           </div>
         </div>
         <div class='mt-2'>
@@ -64,10 +79,7 @@
                 <a href='/restaurants/{{this._id}}/edit'><button
                     class='btn btn-primary btn-sm ms-2'
                   >Edit</button></a>
-                <form
-                  action='/restaurants/{{this._id}}/delete'
-                  method='GET'
-                >
+                <form action='/restaurants/{{this._id}}/delete' method='GET'>
                   <button
                     type='submit'
                     class='btn btn-danger btn-sm text-white ms-2'

@@ -7,10 +7,28 @@ const restaurant = require('../../models/restaurant');
 
 // search
 router.get('/', (req, res) => {
+  if (!req.query.keyword) {
+    return res.redirect('/');
+  }
+
   const keyword = req.query.keyword.trim().toLowerCase();
+  const sort = req.query.sort;
+  let sortKeyword = { _id: 'asc' };
+
+  if (sort === 'A > Z') {
+    sortKeyword = { name: 'asc' };
+  } else if (sort === 'Z > A') {
+    sortKeyword = { name: 'desc' };
+  } else if (sort === '類別') {
+    sortKeyword = { category: 'asc' };
+  } else if (sort === '地區') {
+    sortKeyword = { location: 'asc' };
+  }
+
   restaurant
     .find()
     .lean()
+    .sort(sortKeyword)
     .then((restaurantsData) => {
       const restaurants = restaurantsData.filter((data) => {
         return (
@@ -18,7 +36,11 @@ router.get('/', (req, res) => {
           data.category.includes(keyword)
         );
       });
-      res.render('index', { restaurants: restaurants, keyword: keyword });
+      res.render('index', {
+        restaurants: restaurants,
+        keyword: keyword,
+        sort: sort,
+      });
     })
     .catch((error) => console.log(error));
 });
