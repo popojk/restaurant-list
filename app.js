@@ -8,8 +8,6 @@ const restaurant = require('./models/restaurant');
 const exphbs = require('express-handlebars');
 // require restaurant.json
 const restaurantList = require('./restaurant.json');
-// require mongoose
-const mongoose = require('mongoose');
 // require body-parser
 const bodyParser = require('body-parser');
 // require methodOverride
@@ -19,11 +17,7 @@ const methodOverride = require('method-override');
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
-// setting connect to mongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+
 
 // setting template engine
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
@@ -34,18 +28,6 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 // 每筆請求都會先以 methodOverride 進行前置處理
 app.use(methodOverride('_method'));
-
-
-// get database connect status
-const db = mongoose.connection;
-// connect error
-db.on('error', () => {
-  console.log('mongodb error!');
-});
-// connect success
-db.once('open', () => {
-  console.log('mongodb connected!');
-});
 
 // routes setting
 // index
