@@ -4,19 +4,12 @@ const app = express();
 const port = 3000;
 // require express-handlebars
 const exphbs = require('express-handlebars');
-// require restaurant.json
-const restaurantList = require('./restaurant.json');
 // require body-parser
 const bodyParser = require('body-parser');
 // require methodOverride
 const methodOverride = require('method-override');
 // require router
 const routes = require('./routes');
-
-// 僅在非正式環境時, 使用 dotenv
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
 
 // require mongoose config
 require('./config/mongoose');
