@@ -9,17 +9,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "node models/seeds/restaurantSeeder.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/VinChien/restaurant_list_CRUD.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/VinChien/restaurant_list_CRUD/issues"
-  },
-  "homepage": "https://github.com/VinChien/restaurant_list_CRUD#readme",
   "dependencies": {
     "body-parser": "^1.20.2",
     "express": "^4.16.4",
