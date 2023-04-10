@@ -16,11 +16,11 @@ module.exports = app => {
       User.findOne({email})
         .then(user => {
           if (!user) {
-            return done(null, false, { message: '使用者不存在'})
+            return done(null, false, req.flash( 'warning_msg', '使用者不存在'))
           }
           return bcrypt.compare(password, user.password).then(isMatch => {
             if (!isMatch) {
-              return done(null, false,  {message: 'Email or Passport incorrect'})
+              return done(null, false, req.flash('warning_msg', 'Email or password incorrect'))
             }
             return done(null, user)
           })

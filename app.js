@@ -13,6 +13,8 @@ const methodOverride = require('method-override');
 const routes = require('./routes');
 // require passport
 const usePassport = require('./config/passport')
+//require connect flash
+const flash = require('connect-flash')
 
 // require mongoose config
 require('./config/mongoose');
@@ -36,10 +38,13 @@ app.use(session({
   saveUninitialized: true
 }))
 usePassport(app)
+app.use(flash())
 //transfer login state from req to res
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated()
   res.locals.user = req.user
+  res.locals.success_msg = req.flash('success_msg')
+  res.locals.warning_msg = req.flash('warning_msg')
   next()
 })
 // import request into router
