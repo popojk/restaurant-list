@@ -15,7 +15,6 @@ module.exports = app => {
     (req, email, password, done) => {
       User.findOne({email})
         .then(user => {
-          console.log(req)
           if (!user) {
             return done(null, false, { message: '使用者不存在'})
           }
@@ -26,7 +25,6 @@ module.exports = app => {
             return done(null, user)
           })
         })
-        .then(console.log(req))
         .catch(err => done(err, false))
     }))
 
