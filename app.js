@@ -1,6 +1,8 @@
 // require packages used in the project
 const express = require('express');
 const app = express();
+// require express session
+const session = require('express-session')
 // require express-handlebars
 const exphbs = require('express-handlebars');
 // require body-parser
@@ -9,6 +11,8 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 // require router
 const routes = require('./routes');
+// require passport
+const usePassport = require('./config/passport')
 
 // require mongoose config
 require('./config/mongoose');
@@ -26,6 +30,12 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 // 每筆請求都會先以 methodOverride 進行前置處理
 app.use(methodOverride('_method'));
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true
+}))
+usePassport(app)
 // import request into router
 app.use(routes);
 
