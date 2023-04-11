@@ -1,13 +1,13 @@
 // require Express and Express router
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 
 // require restaurant model
-const restaurant = require('../../models/restaurant');
+const restaurant = require('../../models/restaurant')
 
 // create page
 router.get('/new', (req, res) => {
-  res.render('new');
+  res.render('new')
 });
 
 // create
@@ -16,7 +16,7 @@ router.post('/', (req, res) => {
   restaurant
     .create({...req.body, userId})
     .then(() => res.redirect('/'))
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err))
 });
 
 // detail
@@ -49,22 +49,22 @@ router.put('/:id', (req, res) => {
   restaurant
     .findOneAndUpdate({_id, userId}, updateData)
     .then(() => {
-      res.redirect(`/restaurants/${_id}`);
+      res.redirect(`/restaurants/${_id}`)
     })
     .catch((error) => {
-      console.log(error);
+      console.log(error)
     });
 });
 
 // delete page
 router.get('/:id/delete', (req, res) => {
   const userId = req.user._id
-  const _id = req.params.id;
+  const _id = req.params.id
   return restaurant
     .findOne({_id, userId})
     .lean()
     .then((restaurant) => res.render('delete', { restaurant: restaurant }))
-    .catch((error) => console.log(error));
+    .catch((error) => console.log(error))
 });
 
 

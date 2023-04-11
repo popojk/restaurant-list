@@ -3,6 +3,7 @@ const router = express.Router()
 const passport = require('passport')
 const User = require('../../models/user')
 const bcrypt = require('bcryptjs')
+const axios = require('axios')
 
 //get login page
 router.get('/login', (req, res) => {
@@ -73,7 +74,13 @@ router.post('/register', (req, res) => {
               email,
               password: hash
             }))
-          .then(() => res.redirect('/'))
+          .then(user => {
+            //auto login after registered
+            req.login(user, function(err) {
+              if(err) {return next(err)}
+              return res.redirect('/')
+            })
+          })
           .catch(err => console.log(err))
 
       }
