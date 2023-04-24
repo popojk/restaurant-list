@@ -13,7 +13,7 @@ const methodOverride = require('method-override')
 const routes = require('./routes')
 // require passport
 const usePassport = require('./config/passport')
-//require connect flash
+// require connect flash
 const flash = require('connect-flash')
 
 // require mongoose config
@@ -39,7 +39,7 @@ app.use(session({
 }))
 usePassport(app)
 app.use(flash())
-//transfer login state from req to res
+// transfer login state from req to res
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated()
   res.locals.user = req.user
@@ -48,7 +48,7 @@ app.use((req, res, next) => {
   next()
 })
 // import request into router
-app.use(routes);
+app.use(routes)
 
 // start and listen on the Express server
 app.listen(port, () => {

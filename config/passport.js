@@ -11,24 +11,24 @@ module.exports = app => {
   passport.use(new LocalStrategy({
     usernameField: 'email',
     passReqToCallback: true
-  }, 
-    (req, email, password, done) => {
-      User.findOne({email})
-        .then(user => {
-          if (!user) {
-            return done(null, false, req.flash( 'warning_msg', '使用者不存在'))
+  },
+  (req, email, password, done) => {
+    User.findOne({ email })
+      .then(user => {
+        if (!user) {
+          return done(null, false, req.flash('warning_msg', '使用者不存在'))
+        }
+        return bcrypt.compare(password, user.password).then(isMatch => {
+          if (!isMatch) {
+            return done(null, false, req.flash('warning_msg', 'Email or password incorrect'))
           }
-          return bcrypt.compare(password, user.password).then(isMatch => {
-            if (!isMatch) {
-              return done(null, false, req.flash('warning_msg', 'Email or password incorrect'))
-            }
-            return done(null, user)
-          })
+          return done(null, user)
         })
-        .catch(err => done(err, false))
-    }))
+      })
+      .catch(err => done(err, false))
+  }))
 
-  //facebook login
+  // facebook login
   passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_ID,
     clientSecret: process.env.FACEBOOK_SECRET,
@@ -36,9 +36,9 @@ module.exports = app => {
     profileFields: ['email', 'displayName']
   }, (accessToken, refreshToken, profile, done) => {
     const { name, email } = profile._json
-    User.findOne({email})
+    User.findOne({ email })
       .then(user => {
-        if(user) return done(null, user)
+        if (user) return done(null, user)
         const randomPassword = Math.random().toString(36).slice(-8)
         bcrypt
           .genSalt(10)
@@ -51,19 +51,17 @@ module.exports = app => {
           .then(user => done(null, user))
           .catch(err => done(err, false))
       })
-
   }
   ))
 
-  passport.serializeUser(function(user, done) {
+  passport.serializeUser(function (user, done) {
     done(null, user.id)
   })
-  
-  passport.deserializeUser(function(id, done) {
+
+  passport.deserializeUser(function (id, done) {
     User.findById(id)
       .lean()
       .then(user => done(null, user))
       .catch(err => done(err, null))
   })
-
 }

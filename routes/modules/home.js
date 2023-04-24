@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
       .find({ userId })
       .lean()
       .sort({ _id: 'asc' })
-      .then((restaurants) => res.render('index', { restaurants: restaurants }))
+      .then((restaurants) => res.render('index', { restaurants }))
       .catch((error) => console.error(error))
   } catch (err) {
     console.log(err)

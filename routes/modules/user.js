@@ -3,9 +3,8 @@ const router = express.Router()
 const passport = require('passport')
 const User = require('../../models/user')
 const bcrypt = require('bcryptjs')
-const axios = require('axios')
 
-//get login page
+// get login page
 router.get('/login', (req, res) => {
   res.render('login')
 })
@@ -15,8 +14,8 @@ router.post('/login', passport.authenticate('local', {
   failureRedirect: '/user/login'
 }))
 
-//logout function
-router.get('/logout', (req, res) => {
+// logout function
+router.get('/logout', (req, res, next) => {
   req.logOut(function (err) {
     if (err) { return next(err) }
     req.flash('success_msg', '已成功登出')
@@ -24,13 +23,13 @@ router.get('/logout', (req, res) => {
   })
 })
 
-//get register page
+// get register page
 router.get('/register', (req, res) => {
   res.render('register')
 })
 
-//register function
-router.post('/register', (req, res) => {
+// register function
+router.post('/register', (req, res, next) => {
   try {
     const { name, email, password, confirmPassword } = req.body
     const errors = []
@@ -54,7 +53,7 @@ router.post('/register', (req, res) => {
 
     User.findOne({ email })
       .then(user => {
-        //check if user already registered
+        // check if user already registered
         if (user) {
           errors.push({ message: '這個Email已被註冊' })
           return res.render('register', {
@@ -65,7 +64,7 @@ router.post('/register', (req, res) => {
             confirmPassword
           })
         } else {
-          //if user not yet registered, write into the db
+          // if user not yet registered, write into the db
           return bcrypt
             .genSalt(10)
             .then(salt => bcrypt.hash(password, salt))
@@ -76,14 +75,13 @@ router.post('/register', (req, res) => {
                 password: hash
               }))
             .then(user => {
-              //auto login after registered
+              // auto login after registered
               req.login(user, function (err) {
                 if (err) { return next(err) }
                 return res.redirect('/')
               })
             })
             .catch(err => console.log(err))
-
         }
       })
       .catch(err => console.log(err))

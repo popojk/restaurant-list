@@ -32,7 +32,7 @@ router.get('/:id', (req, res) => {
     return restaurant
       .findOne({ _id, userId })
       .lean()
-      .then((restaurant) => res.render('detail', { restaurant: restaurant }))
+      .then((restaurant) => res.render('detail', { restaurant }))
       .catch((error) => console.log(error))
   } catch (err) {
     console.log(err)
@@ -48,7 +48,7 @@ router.get('/:id/edit', (req, res) => {
     restaurant
       .findOne({ _id, userId })
       .lean()
-      .then((restaurant) => res.render('edit', { restaurant: restaurant }))
+      .then((restaurant) => res.render('edit', { restaurant }))
       .catch((error) => console.log(error))
   } catch (err) {
     console.log(err)
@@ -84,7 +84,7 @@ router.get('/:id/delete', (req, res) => {
     return restaurant
       .findOne({ _id, userId })
       .lean()
-      .then((restaurant) => res.render('delete', { restaurant: restaurant }))
+      .then((restaurant) => res.render('delete', { restaurant }))
       .catch((error) => console.log(error))
   } catch (err) {
     console.log(err)
@@ -93,4 +93,4 @@ router.get('/:id/delete', (req, res) => {
 })
 
 // export router
-module.exports = router;
+module.exports = router

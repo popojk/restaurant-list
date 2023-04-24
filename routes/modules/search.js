@@ -42,13 +42,13 @@ router.get('/', (req, res) => {
           return (
             data.name.toLowerCase().includes(keyword) ||
             data.category.includes(keyword)
-          );
-        });
+          )
+        })
         res.render('index', {
-          restaurants: restaurants,
-          keyword: keyword,
-          sort: sortWord,
-        });
+          restaurants,
+          keyword,
+          sort: sortWord
+        })
       })
       .catch((error) => console.log(error))
   } catch (err) {
@@ -58,4 +58,4 @@ router.get('/', (req, res) => {
 })
 
 // export router
-module.exports = router;
+module.exports = router
