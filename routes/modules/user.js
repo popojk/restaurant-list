@@ -31,62 +31,66 @@ router.get('/register', (req, res) => {
 
 //register function
 router.post('/register', (req, res) => {
-  const { name, email, password, confirmPassword} = req.body
-  const errors = []
-  if( !email || !password || !confirmPassword){
-    errors.push({message: '所有欄位都是必須'})
-  }
+  try {
+    const { name, email, password, confirmPassword } = req.body
+    const errors = []
+    if (!email || !password || !confirmPassword) {
+      errors.push({ message: '所有欄位都是必須' })
+    }
 
-  if(password !== confirmPassword) {
-    errors.push({message: '密碼與確認密碼不相符'})
-  }
+    if (password !== confirmPassword) {
+      errors.push({ message: '密碼與確認密碼不相符' })
+    }
 
-  if (errors.length) {
-    return res.render('register', {
-      errors,
-      name,
-      email,
-      password,
-      confirmPassword
-    })
-  }
+    if (errors.length) {
+      return res.render('register', {
+        errors,
+        name,
+        email,
+        password,
+        confirmPassword
+      })
+    }
 
-  User.findOne({email})
-    .then(user => {
-      //check if user already registered
-      if(user){
-        errors.push({message: '這個Email已被註冊'})
-        return res.render('register', {
-          errors,
-          name,
-          email,
-          password,
-          confirmPassword
-        })
-      } else {
-        //if user not yet registered, write into the db
-        return bcrypt
-          .genSalt(10)
-          .then(salt => bcrypt.hash(password, salt))
-          .then(hash => 
-            User.create({
-              name,
-              email,
-              password: hash
-            }))
-          .then(user => {
-            //auto login after registered
-            req.login(user, function(err) {
-              if(err) {return next(err)}
-              return res.redirect('/')
-            })
+    User.findOne({ email })
+      .then(user => {
+        //check if user already registered
+        if (user) {
+          errors.push({ message: '這個Email已被註冊' })
+          return res.render('register', {
+            errors,
+            name,
+            email,
+            password,
+            confirmPassword
           })
-          .catch(err => console.log(err))
+        } else {
+          //if user not yet registered, write into the db
+          return bcrypt
+            .genSalt(10)
+            .then(salt => bcrypt.hash(password, salt))
+            .then(hash =>
+              User.create({
+                name,
+                email,
+                password: hash
+              }))
+            .then(user => {
+              //auto login after registered
+              req.login(user, function (err) {
+                if (err) { return next(err) }
+                return res.redirect('/')
+              })
+            })
+            .catch(err => console.log(err))
 
-      }
-    })
-    .catch(err => console.log(err))
-
+        }
+      })
+      .catch(err => console.log(err))
+  } catch (err) {
+    console.log(err)
+    res.status(500).send('Internal Server Error')
+  }
 })
 
 module.exports = router
